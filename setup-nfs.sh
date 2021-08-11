@@ -40,6 +40,11 @@ function enable_services () {
     systemctl enable nfs-server
     systemctl restart rpcbind
     systemctl start nfs-server
+    
+    firewall-cmd --permanent --add-service=nfs
+    firewall-cmd --permanent --add-service=rpc-bind
+    firewall-cmd --permanent --add-service=mountd
+    firewall-cmd --reload
 }
 
 function create (){
