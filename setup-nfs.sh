@@ -19,14 +19,16 @@ function install_dependencies () {
     OS=$(cat /etc/os-release | grep -w "ID" | awk -F "=" '{print $2}' | tr -d "\"")
 
     if [ "$OS" == "centos" ]; then
-        dnf install -y nfs-utils
+        dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        dnf install -y nfs-utils dnf firewalld
     elif [ "$OS" == "rhel" ]; then
         RH_REGISTRATION=$(subscription-manager identity 2> /tmp/rhsubs.out; cat /tmp/rhsubs.out; rm -f /tmp/rhsubs.out)
         if [[ "$RH_REGISTRATION" == *"not yet registered"* ]]; then
             echo "ERROR: ensure your system is subscribed to RedHat."
             exit 1
         else
-            dnf install -y nfs-utils
+            dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+            dnf install -y nfs-utils firewalld
         fi
     else
         echo "This operating system is not supported yet."
@@ -40,7 +42,6 @@ function enable_services () {
     systemctl enable nfs-server
     systemctl restart rpcbind
     systemctl start nfs-server
-    
     systemctl enable firewalld
     systemctl start firewalld
 
