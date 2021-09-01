@@ -41,6 +41,9 @@ function enable_services () {
     systemctl restart rpcbind
     systemctl start nfs-server
     
+    systemctl enable firewalld
+    systemctl start firewalld
+
     firewall-cmd --permanent --add-service=nfs
     firewall-cmd --permanent --add-service=rpc-bind
     firewall-cmd --permanent --add-service=mountd
